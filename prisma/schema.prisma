@@ -15,6 +15,7 @@ model Message {
   role      String   // "user" | "assistant"
   user      String?
   text      String
+  teamId    String   // Workspace/team identifier
   createdAt DateTime @default(now())
 }
 
