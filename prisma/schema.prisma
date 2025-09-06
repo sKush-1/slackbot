@@ -17,3 +17,10 @@ model Message {
   text      String
   createdAt DateTime @default(now())
 }
+
+model WorkspaceToken {
+  id       Int    @id @default(autoincrement())
+  teamId   String @unique
+  botToken String
+}
+
