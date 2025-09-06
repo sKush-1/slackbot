@@ -19,7 +19,6 @@ app.use(bodyParser.json({
   verify: (req, res, buf) => { req.rawBody = buf.toString(); }
 }));
 
-// Verify Slack request signatures
 function verifySlack(req) {
   const timestamp = req.headers["x-slack-request-timestamp"];
   const sigBase = `v0:${timestamp}:${req.rawBody}`;
@@ -28,7 +27,6 @@ function verifySlack(req) {
   return crypto.timingSafeEqual(Buffer.from(mySig), Buffer.from(slackSig));
 }
 
-// Get workspace-specific Slack client
 async function getSlackClient(teamId) {
   const record = await prisma.workspaceToken.findUnique({ where: { teamId } });
   if (!record) throw new Error("No bot token found for this workspace");
@@ -54,7 +52,6 @@ app.post("/slack/events", async (req, res) => {
     const rootTs = event.thread_ts || event.ts;
     const text = event.text.replace(/<@\w+>\s*/, "").trim();
 
-    // Save user message
     await prisma.message.create({
       data: { channel, rootTs, ts: event.ts, role: "user", user: event.user, text, teamId: team_id }
     });
@@ -99,7 +96,6 @@ User: ${text}`;
   res.sendStatus(200);
 });
 
-// OAuth redirect handler
 app.get("/slack/oauth_redirect", async (req, res) => {
   const { code } = req.query;
   if (!code) return res.status(400).send("Missing code from Slack");
@@ -116,7 +112,6 @@ app.get("/slack/oauth_redirect", async (req, res) => {
 
     if (!response.data.ok) return res.status(400).json(response.data);
 
-    // Save token per workspace
     await prisma.workspaceToken.upsert({
       where: { teamId: response.data.team.id },
       update: { botToken: response.data.access_token },
