@@ -79,4 +79,35 @@ User: ${text}`;
     res.sendStatus(200);
 });
 
+app.get("/slack/oauth_redirect", async (req, res) => {
+    const { code } = req.query;
+  
+    if (!code) {
+      return res.status(400).send("Missing code from Slack");
+    }
+  
+    try {
+      const response = await axios.post("https://slack.com/api/oauth.v2.access", null, {
+        params: {
+          code,
+          client_id: process.env.SLACK_CLIENT_ID,
+          client_secret: process.env.SLACK_CLIENT_SECRET,
+          redirect_uri: "https://slackbot-production-7e2d.up.railway.app/slack/oauth_redirect",
+        },
+      });
+  
+      if (!response.data.ok) {
+        return res.status(400).json(response.data);
+      }
+  
+      // Save the bot token in your DB for later use
+      console.log("Access token:", response.data.access_token);
+  
+      res.send("✅ App installed successfully! You can now use the bot in your workspace.");
+    } catch (err) {
+      console.error("OAuth error:", err);
+      res.status(500).send("OAuth failed");
+    }
+  });
+
 app.listen(port, () => console.log(`⚡ Warpi running on http://localhost:${port}`));
