@@ -84,7 +84,7 @@ SLACK_SIGNING_SECRET=your-slack-signing-secret-from-slack-app
 SLACK_BOT_TOKEN=xoxb-your-bot-token-from-slack-app
 SLACK_CLIENT_ID=your-slack-client-id-from-slack-app
 SLACK_CLIENT_SECRET=your-slack-client-secret-from-slack-app
-SLACK_REDIRECT_URI=https://your-domain.com/slack/oauth_redirect
+SLACK_REDIRECT_URI=https://slackbot-production-7e2d.up.railway.app/slack/oauth_redirect
 
 # Google Gemini AI
 GOOGLE_API_KEY=your-google-ai-api-key-from-google-ai-studio
@@ -151,7 +151,7 @@ PORT=3000
    # Expose your local server
    ngrok http 3000
    
-   # Copy the https URL (e.g., https://abc123.ngrok.io)
+   # Copy the https URL (e.g., https://bc74a9097d63.ngrok-free.app)
    # Use this URL in your Slack app configuration
    ```
 
@@ -177,11 +177,11 @@ PORT=3000
 1. Go to **OAuth & Permissions**
 2. Under **Redirect URLs**, add:
    ```
-   https://your-domain.com/slack/oauth_redirect
+   https://slackbot-production-7e2d.up.railway.app/slack/oauth_redirect
    ```
    For local development with ngrok:
    ```
-   https://your-ngrok-url.ngrok.io/slack/oauth_redirect
+    https://bc74a9097d63.ngrok-free.app/slack/oauth_redirect
    ```
 
 3. Under **Scopes** → **Bot Token Scopes**, add:
@@ -199,8 +199,8 @@ PORT=3000
 
 1. Go to **Event Subscriptions**
 2. Enable Events: **On**
-3. Request URL: `https://your-domain.com/slack/events`
-   - For local development: `https://your-ngrok-url.ngrok.io/slack/events`
+3. Request URL: `https://slackbot-production-7e2d.up.railway.app/slack/events`
+   - For local development: ` https://bc74a9097d63.ngrok-free.app/slack/events`
    - Slack will verify this URL, make sure your server is running!
 
 4. Under **Subscribe to bot events**, add:
@@ -281,7 +281,7 @@ model WorkspaceToken {
    railway variables set SLACK_BOT_TOKEN=your-slack-bot-token
    railway variables set SLACK_CLIENT_ID=your-slack-client-id
    railway variables set SLACK_CLIENT_SECRET=your-slack-client-secret
-   railway variables set SLACK_REDIRECT_URI=https://your-railway-domain.up.railway.app/slack/oauth_redirect
+   railway variables set SLACK_REDIRECT_URI=https://slackbot-production-7e2d.up.railway.app/slack/oauth_redirect
    ```
 
 6. **Deploy**
@@ -301,8 +301,8 @@ model WorkspaceToken {
    ```
 
 9. **Update Slack App URLs**
-   - Event Request URL: `https://your-domain.up.railway.app/slack/events`
-   - OAuth Redirect URL: `https://your-domain.up.railway.app/slack/oauth_redirect`
+   - Event Request URL: `https://slackbot-production-7e2d.up.railway.app/slack/events`
+   - OAuth Redirect URL: `https://slackbot-production-7e2d.up.railway.app/slack/oauth_redirect`
 
 ### Heroku Deployment
 
@@ -314,7 +314,7 @@ model WorkspaceToken {
 
 2. **Create Heroku App**
    ```bash
-   heroku create your-app-name
+   heroku create slackbot
    heroku addons:create heroku-postgresql:mini
    ```
 
@@ -408,8 +408,8 @@ Make sure all these are set in your deployment platform:
    ```
 
 4. **Update Slack app URLs**
-   - Event Request URL: `https://your-ngrok-url.ngrok.io/slack/events`
-   - OAuth Redirect URL: `https://your-ngrok-url.ngrok.io/slack/oauth_redirect`
+   - Event Request URL: ` https://bc74a9097d63.ngrok-free.app/slack/events`
+   - OAuth Redirect URL: ` https://bc74a9097d63.ngrok-free.app/slack/oauth_redirect`
 
 ## API Endpoints
 
@@ -615,7 +615,7 @@ app.get('/health', (req, res) => {
 2. Check Event Subscriptions URL in Slack app settings
 3. Ensure HTTPS (use ngrok for local development)
 4. Check server logs for incoming requests
-5. Test endpoint manually: `curl -X POST https://your-domain.com/slack/events`
+5. Test endpoint manually: `curl -X POST  https://bc74a9097d63.ngrok-free.app/slack/events`
 
 #### "OAuth installation fails"
 **Cause**: OAuth redirect or token exchange failed.
@@ -640,13 +640,13 @@ app.get('/health', (req, res) => {
 #### Testing the Bot
 1. **Test webhook endpoint**:
    ```bash
-   curl -X POST https://your-domain.com/slack/events \
+   curl -X POST https://slackbot-production-7e2d.up.railway.app/slack/events \
      -H "Content-Type: application/json" \
      -d '{"type":"url_verification","challenge":"test"}'
    ```
 
 2. **Test OAuth flow**:
-   Visit: `https://your-domain.com/slack/oauth_redirect?code=test`
+   Visit: `https://slackbot-production-7e2d.up.railway.app/slack/oauth_redirect?code=test`
 
 3. **Check database**:
    ```bash
